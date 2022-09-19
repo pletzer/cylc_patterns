@@ -1,0 +1,18 @@
+[scheduling]
+    [[graph]]
+        R1 = """
+            a => b
+        """
+[runtime]
+    [[a]]
+        script = """
+        echo "executing task A..."
+        sleep 5
+        echo "done with task A..."
+        """
+    [[b]]
+        script = """
+        echo "executing task B..."
+        sleep 2
+        echo "done with task B"
+        """

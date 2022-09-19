@@ -1,0 +1,20 @@
+[task parameters]
+    m = 0..9
+[scheduling]
+    [[graph]]
+        R1 = """
+            a<m> => b
+        """
+[runtime]
+    [[a<m>]]
+        script = """
+        echo "executing task A for parameter ${CYLC_TASK_PARAM_m}..."
+        sleep $(($RANDOM % 10))
+        echo "done with task A for parameter ${CYLC_TASK_PARAM_m}..."
+        """
+    [[b]]
+        script = """
+        echo "executing task B..."
+        sleep 2
+        echo "done with task B"
+        """
