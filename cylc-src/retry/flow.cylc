@@ -1,0 +1,24 @@
+[scheduling]
+    [[graph]]
+        R1 = """
+            a:succeed? => b
+        """
+[runtime]
+    [[a]]
+        execution retry delays = 20*PT1S
+        script = """
+        echo "executing task A..."
+        # randomly assign success and failure
+        status="1"
+        if [ $(($RANDOM % 10)) -eq 0 ]; then
+            status="0"
+        fi
+        echo "done with task A... status=$status ($CYLC_TASK_TRY_NUMBER)"
+        exit $status
+        """
+    [[b]]
+        script = """
+        echo "executing task B..."
+        sleep 2
+        echo "done with task B"
+        """
