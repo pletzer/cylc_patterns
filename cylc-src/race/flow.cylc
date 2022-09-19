@@ -1,0 +1,32 @@
+[task parameters]
+    m = 0..9
+[scheduling]
+    [[graph]]
+        R1 = """
+            a | b | c  => choose_fastest
+        """
+[runtime]
+    [[a]]
+        script = """
+        echo "starting task A..."
+        sleep $(($RANDOM % 10))
+        echo "done with task A..."
+        """
+    [[b]]
+        script = """
+        echo "starting task B..."
+        sleep $(($RANDOM % 10))
+        echo "done with task B..."
+        """
+    [[c]]
+        script = """
+        echo "starting task C..."
+        sleep $(($RANDOM % 10))
+        echo "done with task C..."
+        """
+    [[choose_fastest]]
+        script = """
+        echo "executing task choose_fastest..."
+        sleep 2
+        echo "done with task choose_fastest"
+        """
