@@ -1,0 +1,42 @@
+[scheduler]
+    allow implicit tasks = True
+[scheduling]
+    cycling mode = integer
+    [[graph]]
+        R1 = """
+            prep => check?
+        """
+        P1 = """
+            model[-P1] => check:succeed? => model
+            check:fail? => diagnose
+        """
+[runtime]
+    [[prep]]
+        script = """
+            touch output_file.txt
+        """
+    [[model]]
+        execution retry delays = 20*PT1S # retry up to 20 times
+        script="""
+            # randomly fail
+            status=$(($RANDOM % 10))
+            if [ $status -eq 0 ]; then
+                echo "CRASHH!"
+                exit 1; # fail
+            fi
+            touch output_file.txt
+            exit 0; # success
+        """
+    [[check]]
+        script = """
+        if [ -f "output_file.txt" ]; then 
+            echo "run was successful, start next cycle"
+            exit 0;
+        else
+            echo "failed to run model"
+        fi
+        """
+    [[diagnose]]
+        script = """
+        echo "Ouch, model failed"
+        """
