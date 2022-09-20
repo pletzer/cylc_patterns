@@ -39,7 +39,7 @@ with
 
 Go into any of the subdirectories, e.g.
 ```
-cd resilient_cycling
+cd cycl-src/resilient_cycling
 cylc validate .
 cylc graph .
 ```
@@ -67,7 +67,9 @@ Run the workflow with
 ```
 cylc tui resilient_cycling
 ```
-Type return on the workflow_name/run1 and then select "play".
+Type return on the workflow_name/run1 and then select "play". The figure below shows the `model` task (blue square) of the 48th cycle being run with the 49th cycle `check` waiting for the `model` task to complete. The green square indicates that 48th `check` task was successful.
+
+![alt terminal user interface (tui) showing a cycle of the resilient cycling pattern](https://github.com/pletzer/cylc_patterns/blob/main/figures/resilient_cycling_tui.png?raw=true)
 
 
 
