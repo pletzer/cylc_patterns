@@ -9,13 +9,31 @@ are the building blocks with which complex workflows can be assembled.
 
 ## Preliminaries
 
-You will need to have [Cylc 8](https://cylc.github.io/cylc-doc/stable/html/) installed,
+Assuming yopu're running on Linux or Mac OSX, you will need to have [Cylc 8](https://cylc.github.io/cylc-doc/stable/html/) installed,
 ```
 conda create -n cylc python=3.9
 conda activate cylc
 conda install -c conda-forge cylc-flow
 conda install -c conda-forge cylc-uiserver
 ```
+
+## Mac users
+
+If you get error
+```
+...
+nodename nor servname provided, or not known: '1.0.0.127.in-addr.arpa'
+```
+or similar, then you'll have to update the `hostuserutil.py` file. Around line 113, replace
+```
+                target = socket.getfqdn()
+```
+with 
+```
+                target = socket.gethostname()
+```
+
+
 
 ## Example
 
