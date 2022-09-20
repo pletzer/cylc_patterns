@@ -13,27 +13,35 @@
 [runtime]
     [[prep]]
         script = """
-            touch output_file.txt
+            touch /tmp/output_file.txt
+            echo $PWD
+            echo "this is what I am seeing"
+            echo $(ls -ltr)
         """
     [[model]]
-        execution retry delays = 20*PT1S # retry up to 20 times
+        execution retry delays = 20*PT1S # try up to 20 times
         script="""
             # randomly fail
             status=$(($RANDOM % 10))
             if [ $status -eq 0 ]; then
                 echo "CRASHH!"
-                exit 1; # fail
+                exit 1 # fail
             fi
-            touch output_file.txt
-            exit 0; # success
+            # the crreation of this file simulates successful execution
+            touch /tmp/output_file.txt
+            exit 0 # succeed
         """
     [[check]]
         script = """
-        if [ -f "output_file.txt" ]; then 
+        if [ -f "/tmp/output_file.txt" ]; then 
             echo "run was successful, start next cycle"
-            exit 0;
+            rm /tmp/output_file.txt
+            exit 0 # succeed
         else
-            echo "failed to run model"
+            echo "failed to run model, no file /tmp/output_file.txt!"
+            echo "this is what I am seeing"
+            echo $(ls -ltr /tmp)
+            exit 1 # fail
         fi
         """
     [[diagnose]]
