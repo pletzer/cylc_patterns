@@ -69,6 +69,8 @@ cylc tui resilient_cycling
 ```
 Type return on the workflow_name/run1 and then select "play".
 
+![alt terminal user interface (tui) showing a cycle of the resilient cycling pattern](https://github.com/pletzer/cylc_patterns/blob/main/figures/resilient_cycling_tui.png?raw=true)
+
 
 
 
