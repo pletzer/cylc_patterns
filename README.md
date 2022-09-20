@@ -35,13 +35,16 @@ with
 
 
 
-## Example
+## Example of a workflow pattern
 
 Go into any of the subdirectories, e.g.
 ```
 cd resilient_cycling
 cylc validate .
 cylc graph .
+```
+
+
 cylc install resilient_cycling
 cylc tui resilient_cycling
 ```
