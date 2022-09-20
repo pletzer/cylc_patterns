@@ -39,7 +39,7 @@ with
 
 Go into any of the subdirectories, e.g.
 ```
-cd resilient_cycling
+cd cycl-src/resilient_cycling
 cylc validate .
 cylc graph .
 ```
