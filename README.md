@@ -17,7 +17,7 @@ conda install -c conda-forge cylc-flow
 conda install -c conda-forge cylc-uiserver
 ```
 
-Mac users beware, you may need to apply the fix [here](#mac-users)
+Mac users beware, you may need to apply the fix [here](#mac-users).
 
 ## Example of a workflow pattern
 
@@ -56,7 +56,7 @@ Type return on the workflow_name/run1 and then select "play". The figure below s
 ![alt terminal user interface (tui) showing a cycle of the resilient cycling pattern](https://github.com/pletzer/cylc_patterns/blob/main/figures/resilient_cycling_tui.png?raw=true)
 
 
-# Trouble shooting
+# Troubleshooting
 
 ## Mac users
 
