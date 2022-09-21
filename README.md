@@ -1,6 +1,6 @@
 # cylc_patterns
 
-A collection of commonly used Cylc workflow patterns 
+A collection of commonly used [Cylc](https://www.cylc.org) workflow patterns 
 
 ## Overview
 
@@ -23,11 +23,11 @@ Mac users beware, you may need to apply the fix [here](#mac-users).
 
 Go into any of the subdirectories, e.g.
 ```
-cd cycl-src/resilient_cycling
+cd cylc-src/resilient_cycling
 cylc validate .
 cylc graph .
 ```
-This shows the first three cylcles of the resilient cylcing pattern. The worflow graph is encoded in the `flow.cylc` file.
+This shows the first three cylcles of the resilient cycling pattern. The worflow graph is encoded in the `flow.cylc` file.
 ```
     [[graph]]
         R1 = """
