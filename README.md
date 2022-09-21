@@ -9,7 +9,7 @@ are the building blocks with which complex workflows can be assembled.
 
 ## Preliminaries
 
-Assuming yopu're running on Linux or Mac OSX, you will need to have [Cylc 8](https://cylc.github.io/cylc-doc/stable/html/) installed,
+Assuming you're running on Linux or Mac OSX, you will need to have [Cylc 8](https://cylc.github.io/cylc-doc/stable/html/) installed,
 ```
 conda create -n cylc python=3.9
 conda activate cylc
@@ -27,7 +27,7 @@ cd cycl-src/resilient_cycling
 cylc validate .
 cylc graph .
 ```
-This shows the first three cylcles of the resilient cylcing pattern. The worflow graph is encoded in the `flow.cylc` file.
+This shows the first three cycles of the resilient cycling pattern. The workflow graph is encoded in the `flow.cylc` file.
 ```
     [[graph]]
         R1 = """
@@ -38,11 +38,11 @@ This shows the first three cylcles of the resilient cylcing pattern. The worflow
             check:fail? => diagnose
         """
 ```
-The first task, `prep`, creates a file, `output_file.txt`. If file `output_file.txt` is present then task `check` succeeds and task `model` is then run. Occasionally, task `model` will fail -- we allow for up to 20 attempts. When task `check` succeeds, the next cycle starts. If task `check` fails then task `diagnose` will be run. This workflow supports an inifite number of cycles.
+The first task, `prep`, creates a file, `output_file.txt`. If file `output_file.txt` is present then task `check` succeeds and task `model` is then run. Occasionally, task `model` will fail -- we allow for up to 20 attempts. When task `check` succeeds, the next cycle starts. If task `check` fails then task `diagnose` will be run. This workflow supports an infinite number of cycles.
 
 ![alt resilient cycling pattern](https://github.com/pletzer/cylc_patterns/blob/main/figures/resilient_cycling.png?raw=true)
 
-Install the worflow with
+Install the workflow with
 ```
 cylc install resilient_cycling
 ```
