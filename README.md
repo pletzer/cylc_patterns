@@ -1,6 +1,6 @@
 # cylc_patterns
 
-A collection of commonly used Cylc workflow patterns 
+A collection of commonly used [Cylc](https://www.cylc.org) workflow patterns 
 
 ## Overview
 
