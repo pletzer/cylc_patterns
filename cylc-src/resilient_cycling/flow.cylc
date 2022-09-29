@@ -3,48 +3,19 @@
 [scheduling]
     cycling mode = integer
     [[graph]]
-        R1 = """
-            prep => check?
-        """
         P1 = """
-            model[-P1] => check:succeed? => model
-            check:fail? => diagnose
+            fix[-P1] => model?
+            model:succeed? => finish
+            model:fail? => diagnose => fix
         """
 [runtime]
-    [[prep]]
-        script = """
-            touch /tmp/output_file.txt
-            echo $PWD
-            echo "this is what I am seeing"
-            echo $(ls -ltr)
-        """
     [[model]]
-        execution retry delays = 20*PT1S # try up to 20 times
+        execution retry delays = 3*PT1S # try up to 3 times
         script="""
             # randomly fail
-            status=$(($RANDOM % 10))
-            if [ $status -eq 0 ]; then
-                echo "CRASHH!"
-                exit 1 # fail
-            fi
-            # the crreation of this file simulates successful execution
-            touch /tmp/output_file.txt
-            exit 0 # succeed
-        """
-    [[check]]
-        script = """
-        if [ -f "/tmp/output_file.txt" ]; then 
-            echo "run was successful, start next cycle"
-            rm /tmp/output_file.txt
-            exit 0 # succeed
-        else
-            echo "failed to run model, no file /tmp/output_file.txt!"
-            echo "this is what I am seeing"
-            echo $(ls -ltr /tmp)
-            exit 1 # fail
-        fi
+            status=$(($RANDOM % 20))
+            exit $status
         """
     [[diagnose]]
-        script = """
-        echo "Ouch, model failed"
-        """
+    [[fix]]
+    [[finish]]

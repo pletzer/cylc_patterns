@@ -1,4 +1,4 @@
-# Sequential pattern
+# Retry pattern
 
 In this directory, type
 ```

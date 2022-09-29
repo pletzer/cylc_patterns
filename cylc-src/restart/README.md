@@ -1,4 +1,4 @@
-# Sequential pattern
+# Restart pattern
 
 In this directory, type
 ```

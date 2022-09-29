@@ -1,4 +1,6 @@
-# Sequential pattern
+# Resilient cycling pattern
+
+This example combines running multiple attempts of a model with cycling until the model succeeds.
 
 In this directory, type
 ```

@@ -1,4 +1,4 @@
-# Parametrized scatter pattern
+# Race pattern
 
 In this directory, type
 ```

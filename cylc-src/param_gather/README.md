@@ -1,4 +1,4 @@
-# Parametrized scatter pattern
+# Parametrized gather pattern
 
 In this directory, type
 ```
