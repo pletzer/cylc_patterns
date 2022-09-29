@@ -3,22 +3,18 @@
 [scheduling]
     [[graph]]
         R1 = """
-            MODELS:succeed-any  => choose_fastest & kill_tasks
+            MODELS:succeed-any?  => choose_fastest & kill_tasks
         """
 [runtime]
     [[MODELS]]
         script = """
-        echo "starting task model ${CYLC_TASK_PARAM_m}..."
         sleep $(($RANDOM % 10))
-        echo "done with task model ${CYLC_TASK_PARAM_m}..."
         """
     [[model<m>]]
         inherit = MODELS
     [[choose_fastest]]
         script = """
-        echo "executing task choose_fastest..."
         sleep 2
-        echo "done with task choose_fastest"
         """
     [[kill_tasks]]
         script = """
