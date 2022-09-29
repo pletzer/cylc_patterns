@@ -1,0 +1,18 @@
+[scheduler]
+    allow implicit tasks = True
+[scheduling]
+    cycling mode = integer
+    [[graph]]
+        P1 = """
+            diagnose[-P1] => model?
+            model:succeed? => finish
+            model:fail? => diagnose
+        """
+[runtime]
+    [[model]]
+        script="""
+            status=$(($RANDOM % 10))
+            exit $status # 0 is success
+        """
+    [[diagnose]]
+    [[finish]]
