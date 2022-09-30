@@ -30,15 +30,13 @@ cylc graph .
 This shows the first three cycles of the resilient cycling pattern. The workflow graph is encoded in the `flow.cylc` file.
 ```
     [[graph]]
-        R1 = """
-            prep => check?
-        """
         P1 = """
-            model[-P1] => check:succeed? => model
-            check:fail? => diagnose
+            fix[-P1] => model?
+            model:succeed? => finish
+            model:fail? => diagnose => fix
         """
 ```
-The first task, `prep`, creates a file, `output_file.txt`. If file `output_file.txt` is present then task `check` succeeds and task `model` is then run. Occasionally, task `model` will fail -- we allow for up to 20 attempts. When task `check` succeeds, the next cycle starts. If task `check` fails then task `diagnose` will be run. This workflow supports an infinite number of cycles.
+In this case we have a model ("model"), which may fail or succeed. Up to 3 attempts of running "model" will be submitted. If the model succeeds after one such attempt then task "finish" is invoked. If not, then the "diagnose" and "fix" tasks are called. The latter will attempt to fix the input and run "model" gain, thereby starting a new cycle.
 
 ![alt resilient cycling pattern](https://github.com/pletzer/cylc_patterns/blob/main/figures/resilient_cycling.png?raw=true)
 
