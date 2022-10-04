@@ -36,7 +36,7 @@ This shows the first three cycles of the resilient cycling pattern. The workflow
             model:fail? => diagnose => fix
         """
 ```
-In this case we have a model ("model"), which may fail or succeed. Up to 3 attempts of running "model" will be submitted. If the model succeeds after one such attempt then task "finish" is invoked. If not, then the "diagnose" and "fix" tasks are called. The latter will attempt to fix the input and run "model" gain, thereby starting a new cycle.
+In this case we have a model ("model"), which may fail or succeed. Up to 3 attempts of running "model" will be submitted. If the model succeeds after one such attempt then task "finish" is invoked. If not, then the "diagnose" and "fix" tasks are called. The latter will attempt to fix the input and run "model" again, thereby starting a new cycle.
 
 ![alt resilient cycling pattern](https://github.com/pletzer/cylc_patterns/blob/main/figures/resilient_cycling.png?raw=true)
 
