@@ -1,24 +1,35 @@
 module model_mod
 
     type :: input_t
-        logical :: cold_start
         integer :: nsteps
         integer :: save_restart_steps
     end type
 
 contains
 
-    function parse_command_line_arguments(file_path) result(res)
+    function parse_command_line_arguments(file_path, beg_step) result(res)
         implicit none
         character(len=*) :: file_path
+        integer :: beg_step
+        character(len=10) :: beg_step_str
         integer :: res
 
         res = 0
+
         file_path = 'model.nml'
+        beg_step = 0
+
         if (command_argument_count() >= 1) then
             call get_command_argument(1, file_path)
         endif
         print *, 'file_path = ', file_path
+
+        if (command_argument_count() >= 2) then
+            call get_command_argument(2, beg_step_str)
+            read(beg_step_str, *) beg_step 
+        endif
+        print *, 'beg_step = ', beg_step
+
     end function parse_command_line_arguments
 
     function read_namelist(file_path, input_data) result(res)
@@ -27,9 +38,8 @@ contains
         character(len=*) :: file_path
         type(input_t) :: input_data
         integer :: ier, fu, res
-        logical :: cold_start
         integer :: nsteps, save_restart_steps
-        namelist /input/ cold_start, nsteps, save_restart_steps
+        namelist /input/ nsteps, save_restart_steps
 
         res = 0
         inquire(file=file_path, iostat=ier)
@@ -53,7 +63,6 @@ contains
 
         close(fu)
 
-        input_data%cold_start = cold_start
         input_data%nsteps = nsteps
         input_data%save_restart_steps = save_restart_steps
     end function read_namelist
@@ -82,10 +91,10 @@ program model
     implicit none
     integer :: ier
     character(len=256) :: file_path
-    integer :: i
+    integer :: i, beg_step
     type(input_t) :: input_data
 
-    ier = parse_command_line_arguments(file_path)
+    ier = parse_command_line_arguments(file_path, beg_step)
     if (ier /= 0) error stop 'ERROR parsing command line arguments'
 
     ! read namelist

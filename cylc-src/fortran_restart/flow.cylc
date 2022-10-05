@@ -13,5 +13,11 @@
         """
 [runtime]
     [[model]]
+        script = "bin/model model.nml 0"
     [[model_restart]]
+        script = """
+        # find the latest restart file
+        step=$(ls model_output_*.txt | awk -F '_' '{print $3;}' | awk -F '.' '{print $1;}' | sort)
+        bin/model model_restart.nml $step
+        """
     [[finish]]
