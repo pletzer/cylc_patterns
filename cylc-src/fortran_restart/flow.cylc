@@ -8,17 +8,23 @@
             model:fail? => model_restart?
         """
         P1 = """
-            model_restart[-P1]:succeed? => finish
             model_restart[-P1]:fail? => model_restart?
+            model_restart[-P1]:succeed? => finish
         """
 [runtime]
     [[model]]
-        script = "bin/model model.nml 0"
+        script = """
+        SRC_DIR=/Users/pletzera/test/cylc_patterns/cylc-src/fortran_restart
+        $SRC_DIR/bin/model $SRC_DIR/model.nml 0
+        """
     [[model_restart]]
         script = """
+        SRC_DIR=/Users/pletzera/test/cylc_patterns/cylc-src/fortran_restart
         # find the latest restart file
         step=$(ls model_output_*.txt | awk -F '_' '{print $3;}' | awk -F '.' '{print $1;}' | sort)
-        bin/model model_restart.nml $step
+        echo "will restart from step ${step}..."
+        $SRC_DIR/bin/model $SRC_DIR/model.nml $step
+        echo "done"
         """
     [[finish]]
         script = """

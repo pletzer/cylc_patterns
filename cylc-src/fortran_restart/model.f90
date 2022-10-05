@@ -103,7 +103,7 @@ program model
 
     ! loop
     do i = beg_step, input_data%nsteps
-        
+
         call sleep(1) ! simulate number crunching
 
         if ( modulo(i, input_data%save_restart_steps) == 0) then
@@ -111,8 +111,6 @@ program model
         end if
     enddo
 
-
     stop 0 ! success
-
 
 end program model
