@@ -101,10 +101,10 @@ program model
     ier = read_namelist(file_path, input_data)
     if (ier /= 0) error stop 'ERROR reading the namelist'
 
-
     ! loop
-    do i = 1, input_data%nsteps
-        call sleep(10) ! simulate number crunching
+    do i = beg_step, input_data%nsteps
+        
+        call sleep(1) ! simulate number crunching
 
         if ( modulo(i, input_data%save_restart_steps) == 0) then
             call write_output(i)

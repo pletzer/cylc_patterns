@@ -21,3 +21,6 @@
         bin/model model_restart.nml $step
         """
     [[finish]]
+        script = """
+        echo "We're done!"
+        """
