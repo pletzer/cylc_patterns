@@ -1,0 +1,17 @@
+[scheduler]
+    allow implicit tasks = True
+[scheduling]
+    cycling mode = integer
+    [[graph]]
+        R1 = """
+            model:succeed? => finish
+            model:fail? => model_restart?
+        """
+        P1 = """
+            model_restart[-P1]:succeed? => finish
+            model_restart[-P1]:fail? => model_restart?
+        """
+[runtime]
+    [[model]]
+    [[model_restart]]
+    [[finish]]
