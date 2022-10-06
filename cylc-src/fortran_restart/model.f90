@@ -103,12 +103,12 @@ program model
     if (ier /= 0) error stop 'ERROR reading the namelist'
 
     ! loop
-    do i = beg_step, input_data%nsteps
+    do i = beg_step + 1, input_data%nsteps
 
         call sleep(1) ! simulate number crunching
 
-        if ( modulo(i - beg_step + 1, 3) == 0 ) then
-            ! fail every 3 times
+        if ( modulo(i - beg_step + 1, 8) == 0 ) then
+            ! fail every N times
             stop 1
         endif
 
