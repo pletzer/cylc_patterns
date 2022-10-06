@@ -83,7 +83,7 @@ contains
 
             write(index_str, '(I0)') i
             
-            file_name = trim(output_dir) // 'model_output_' // trim(index_str) // '.txt'
+            file_name = trim(output_dir) // '/model_output_' // trim(index_str) // '.txt'
             print *, 'writing ', file_name
             open(action='write', file=file_name, iostat=ier, newunit=fu)
             close(fu)
@@ -110,6 +110,11 @@ program model
     ! read namelist
     ier = read_namelist(file_path, input_data)
     if (ier /= 0) error stop 'ERROR reading the namelist'
+
+    if (beg_step >= input_data%nsteps) then
+        ! nothing to do
+        stop 0
+    endif
 
     ! loop
     do i = beg_step + 1, input_data%nsteps

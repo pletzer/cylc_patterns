@@ -27,7 +27,6 @@
         # run from the current step
         echo "will restart from step ${step}..."
         $SRC_DIR/bin/model $SRC_DIR/model.nml $step $SRC_DIR
-        mv model_output_*.txt $SRC_DIR
         echo "done"
         """
     [[finish]]
