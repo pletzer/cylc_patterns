@@ -107,9 +107,7 @@ program model
 
         call sleep(1) ! simulate number crunching
 
-        call random_number(r)
-
-        if ( modulo(i + 1, 3) == 0 ) then
+        if ( modulo(i - beg_step + 1, 3) == 0 ) then
             ! fail every 3 times
             stop 1
         endif
