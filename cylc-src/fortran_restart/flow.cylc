@@ -16,14 +16,23 @@
         script = """
         SRC_DIR=/Users/pletzera/test/cylc_patterns/cylc-src/fortran_restart
         $SRC_DIR/bin/model $SRC_DIR/model.nml 0
+        # save the restart files
+        mv model_output_*.txt $SRC_DIR
         """
     [[model_restart]]
         script = """
         SRC_DIR=/Users/pletzera/test/cylc_patterns/cylc-src/fortran_restart
         # find the latest restart file
-        step=$(ls model_output_*.txt | awk -F '_' '{print $3;}' | awk -F '.' '{print $1;}' | sort)
+        echo "now in $(pwd)"
+        echo "$(ls -ltr)"
+
+        # find the latest step
+        step=$(python ${SRC_DIR}/bin/find_latest_output_file.py "${SRC_DIR}/model_output_*.txt")
+
+        # run from the current step
         echo "will restart from step ${step}..."
         $SRC_DIR/bin/model $SRC_DIR/model.nml $step
+        mv model_output_*.txt $SRC_DIR
         echo "done"
         """
     [[finish]]

@@ -93,6 +93,7 @@ program model
     character(len=256) :: file_path
     integer :: i, beg_step
     type(input_t) :: input_data
+    real :: r
 
     ier = parse_command_line_arguments(file_path, beg_step)
     if (ier /= 0) error stop 'ERROR parsing command line arguments'
@@ -106,7 +107,14 @@ program model
 
         call sleep(1) ! simulate number crunching
 
-        if ( modulo(i, input_data%save_restart_steps) == 0) then
+        call random_number(r)
+
+        if ( modulo(i + 1, 3) == 0 ) then
+            ! fail every 3 times
+            stop 1
+        endif
+
+        if ( modulo(i, input_data%save_restart_steps) == 0 ) then
             call write_output(i)
         end if
     enddo
