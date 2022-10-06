@@ -33,7 +33,7 @@ contains
         print *, 'beg_step = ', beg_step
 
         if (command_argument_count() >= 3) then
-            call get_command_argument(2, output_dir)
+            call get_command_argument(3, output_dir)
         endif
         print *, 'output_dir = ', output_dir
 
@@ -83,7 +83,7 @@ contains
 
             write(index_str, '(I0)') i
             
-            file_name = output_dir // 'model_output_' // trim(index_str) // '.txt'
+            file_name = trim(output_dir) // 'model_output_' // trim(index_str) // '.txt'
             print *, 'writing ', file_name
             open(action='write', file=file_name, iostat=ier, newunit=fu)
             close(fu)
