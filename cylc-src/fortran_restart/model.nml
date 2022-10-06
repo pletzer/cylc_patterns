@@ -1,0 +1,4 @@
+&input
+ nsteps = 10,
+ save_restart_steps = 1
+ /

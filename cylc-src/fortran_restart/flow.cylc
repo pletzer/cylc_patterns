@@ -1,0 +1,35 @@
+[scheduler]
+    allow implicit tasks = True
+[scheduling]
+    cycling mode = integer
+    [[graph]]
+        R1 = """
+            model:succeed? => finish
+            model:fail? => model_restart?
+        """
+        P1 = """
+            model_restart[-P1]:fail? => model_restart?
+            model_restart[-P1]:succeed? => finish
+        """
+[runtime]
+    [[model]]
+        script = """
+        SRC_DIR=/Users/pletzera/test/cylc_patterns/cylc-src/fortran_restart
+        $SRC_DIR/bin/model $SRC_DIR/model.nml 0 $SRC_DIR
+        """
+    [[model_restart]]
+        script = """
+        SRC_DIR=/Users/pletzera/test/cylc_patterns/cylc-src/fortran_restart
+
+        # find the latest step
+        step=$(python ${SRC_DIR}/bin/find_latest_output_file.py "${SRC_DIR}/model_output_*.txt")
+
+        # run from the current step
+        echo "will restart from step ${step}..."
+        $SRC_DIR/bin/model $SRC_DIR/model.nml $step $SRC_DIR
+        echo "done"
+        """
+    [[finish]]
+        script = """
+        echo "We're done!"
+        """
