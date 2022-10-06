@@ -19,5 +19,9 @@ for f in files:
 		print(f'cannot parse {fbase}')
 
 # find the largest value
-step = numpy.amax(steps)
-print(step)
+if len(steps) > 0:
+	step = numpy.amax(steps)
+	print(step)
+else:
+	# no output file
+	print(0)

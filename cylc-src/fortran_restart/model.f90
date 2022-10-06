@@ -7,10 +7,11 @@ module model_mod
 
 contains
 
-    function parse_command_line_arguments(file_path, beg_step) result(res)
+    function parse_command_line_arguments(file_path, beg_step, output_dir) result(res)
         implicit none
         character(len=*) :: file_path
         integer :: beg_step
+        character(len=*) :: output_dir
         character(len=10) :: beg_step_str
         integer :: res
 
@@ -18,6 +19,7 @@ contains
 
         file_path = 'model.nml'
         beg_step = 0
+        output_dir = './'
 
         if (command_argument_count() >= 1) then
             call get_command_argument(1, file_path)
@@ -29,6 +31,11 @@ contains
             read(beg_step_str, *) beg_step 
         endif
         print *, 'beg_step = ', beg_step
+
+        if (command_argument_count() >= 3) then
+            call get_command_argument(2, output_dir)
+        endif
+        print *, 'output_dir = ', output_dir
 
     end function parse_command_line_arguments
 
@@ -67,15 +74,16 @@ contains
         input_data%save_restart_steps = save_restart_steps
     end function read_namelist
 
-    subroutine write_output(i)
+    subroutine write_output(i, output_dir)
             implicit none
             integer :: i, fu, ier
-            character(len=32) :: file_name
+            character(len=*) :: output_dir
+            character(len=256) :: file_name
             character(len=10) :: index_str
 
             write(index_str, '(I0)') i
             
-            file_name = 'model_output_' // trim(index_str) // '.txt'
+            file_name = output_dir // 'model_output_' // trim(index_str) // '.txt'
             print *, 'writing ', file_name
             open(action='write', file=file_name, iostat=ier, newunit=fu)
             close(fu)
@@ -91,11 +99,12 @@ program model
     implicit none
     integer :: ier
     character(len=256) :: file_path
+    character(len=256) :: output_dir
     integer :: i, beg_step
     type(input_t) :: input_data
     real :: r
 
-    ier = parse_command_line_arguments(file_path, beg_step)
+    ier = parse_command_line_arguments(file_path, beg_step, output_dir)
     if (ier /= 0) error stop 'ERROR parsing command line arguments'
 
     ! read namelist
@@ -113,7 +122,7 @@ program model
         endif
 
         if ( modulo(i, input_data%save_restart_steps) == 0 ) then
-            call write_output(i)
+            call write_output(i, output_dir)
         end if
     enddo
 
