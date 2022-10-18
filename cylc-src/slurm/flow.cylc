@@ -1,0 +1,22 @@
+[scheduling]
+    [[graph]]
+        R1 = """
+            a & b
+        """
+[runtime]
+    [[a]]
+        platform = slurm_platform
+        execution time limit = PT1M
+        script = """
+        echo "executing task A..."
+        sleep 5
+        echo "done with task A..."
+        """
+        [[[directives]]]
+            --ntasks = 1
+    [[b]]
+        script = """
+        echo "executing task B..."
+        sleep 2
+        echo "done with task B"
+        """
