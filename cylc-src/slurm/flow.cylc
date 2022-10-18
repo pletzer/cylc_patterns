@@ -5,7 +5,7 @@
         """
 [runtime]
     [[a]]
-        platform = slurm_platform
+        platform = mahuika-slurm
         execution time limit = PT1M
         script = """
         echo "executing task A..."
