@@ -1,20 +1,26 @@
 [task parameters]
-    m = 0..9
+    # run 10 instances
+    m = 1..10
 [scheduling]
     [[graph]]
+        # R1 means run once
+        # this is the dependency graph. Run instances prep_run. 
+        # When all the prep_run instances complete, run collate. 
         R1 = """
-            a<m> => b
+            prep_run<m> => collate
         """
 [runtime]
-    [[a<m>]]
+    [[prep_run<m>]]
+        # Implementation of the prep_run task.
         script = """
-        echo "executing task A for parameter ${CYLC_TASK_PARAM_m}..."
+        echo "executing prep_run for parameter ${CYLC_TASK_PARAM_m}..."
         sleep $(($RANDOM % 10))
-        echo "done with task A for parameter ${CYLC_TASK_PARAM_m}..."
+        echo "done with prep_run for parameter ${CYLC_TASK_PARAM_m}"
         """
-    [[b]]
+    [[collate]]
+        # Implementation of the collate task
         script = """
-        echo "executing task B..."
+        echo "executing task collate..."
         sleep 2
-        echo "done with task B"
+        echo "done with task collate"
         """
