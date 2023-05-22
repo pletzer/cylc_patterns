@@ -16,16 +16,16 @@
   {% for N in NS %}
   [[prep{{ N }}<m>]]
     script = """
-    echo "Running prep for {{ N }} and m=${CYLC_TASK_PARAM_m}... "
+    echo "Running prep for {{ N }} and m=${CYLC_TASK_PARAM_m} in directory $(pwd)... "
     """
   [[run{{ N }}<m>]]
     script = """
-    echo "Running run for {{ N }} and m=${CYLC_TASK_PARAM_m}... "
+    echo "Running run for {{ N }} and m=${CYLC_TASK_PARAM_m} in directory $(pwd)... "
     """
   {% endfor %}
   [[analyse]]
     platform = localhost
     script = """
-    echo "Running analyse..."
+    echo "Running analyse in directory $(pwd)..."
     """
 
