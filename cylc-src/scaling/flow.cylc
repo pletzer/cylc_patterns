@@ -1,0 +1,31 @@
+#!Jinja2
+[scheduler]
+  allow implicit tasks = True
+{% set NS = 1, 2, 3 %}
+[task parameters]
+    # run multiple instances
+    m = 0..1
+[scheduling] # Define the tasks and when they should run
+  [[graph]]
+    R1 = """ # run this graph once
+    {% for N in NS %} 
+      prep{{ N }}<m> => run{{ N }}<m> => analyse
+    {% endfor %}
+    """
+[runtime] # Define what each task should run
+  {% for N in NS %}
+  [[prep{{ N }}<m>]]
+    script = """
+    echo "Running prep for {{ N }} and m=${CYLC_TASK_PARAM_m}... "
+    """
+  [[run{{ N }}<m>]]
+    script = """
+    echo "Running run for {{ N }} and m=${CYLC_TASK_PARAM_m}... "
+    """
+  {% endfor %}
+  [[analyse]]
+    platform = localhost
+    script = """
+    echo "Running analyse..."
+    """
+
