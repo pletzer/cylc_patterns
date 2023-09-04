@@ -1,6 +1,6 @@
 #!Jinja2
 [scheduler]
-  allow implicit tasks = True
+  #allow implicit tasks = True
 {% set NS = 1, 2, 3 %}
 [task parameters]
     # run multiple instances
@@ -15,6 +15,7 @@
 [runtime] # Define what each task should run
   {% for N in NS %}
   [[prep{{ N }}<m>]]
+  [[prep_root{{ N }}]]
     script = """
     echo "Running prep for {{ N }} and m=${CYLC_TASK_PARAM_m} in directory $(pwd)... "
     """

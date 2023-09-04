@@ -1,0 +1,15 @@
+#!jinja2
+{% set NLEVELS = 5 %}
+[scheduler]
+    # so we don't have to implement the tasks
+    allow implicit tasks = True
+[scheduling]
+  [[graph]]
+    R1 = """
+{% for level in range(NLEVELS - 1) %}
+   {% for i in range(2**level) %}
+       a_{{ level+1 }}_{{ 2*i }} & a_{{ level+1 }}_{{ 2*i+1 }} => a_{{ level }}_{{ i }}
+   {% endfor %}
+{% endfor %}
+      """
+
