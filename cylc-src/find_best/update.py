@@ -4,7 +4,8 @@ import random
 import numpy
 
 
-OBJFUN_EXPR = '1 + 2*(x-3)**4'
+#3OBJFUN_EXPR = '1 + 2*(x-3)**4'
+OBJFUN_EXPR = '1 - 0.2*(x-3)**2*cos((x-3)*2*pi)'
 
 def update(x0, objfun_expr) -> float:
     x = sympy.Symbol('x')
