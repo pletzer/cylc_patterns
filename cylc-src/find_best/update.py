@@ -6,7 +6,6 @@ import numpy
 
 OBJFUN_EXPR = '1 + 2*(x-3)**4'
 
-
 def update(x0, objfun_expr) -> float:
     x = sympy.Symbol('x')
     f = sympy.parsing.sympy_parser.parse_expr(objfun_expr)
@@ -38,10 +37,15 @@ def merge(paramfilea: str, paramfileb: str, *, outfile: str) -> None:
     param: paramfileb: second parameter file
     :param outfile: output file storing the new param value     
     """
-    xa = numpy.load(paramfilea, allow_pickle=True)
-    xb = numpy.load(paramfileb, allow_pickle=True)
-    # mix the two values
-    x0 = 0.5*(xa + xb)
+    # numpy.load returns an array object
+    xa = float(numpy.load(paramfilea, allow_pickle=True))
+    xb = float(numpy.load(paramfileb, allow_pickle=True))
+    x = sympy.Symbol('x')
+    f = sympy.parsing.sympy_parser.parse_expr(OBJFUN_EXPR)
+    fa = f.evalf(subs={x: xa})
+    fb = f.evalf(subs={x: xb})
+    # mix the two values, assumes fa & fb > 0
+    x0 = (fb*xa + fa*xb)/(fa + fb)
     xnew = update(x0, objfun_expr=OBJFUN_EXPR)
     numpy.save(outfile, xnew)
 
