@@ -1,6 +1,5 @@
 #!jinja2
 {% set NLEVELS = 5 %}
-{% set GAMMA_INIT = 0.5 %}
 [scheduling]
   [[graph]]
     R1 = """
@@ -18,7 +17,7 @@
 {% for i in range(2**(NLEVELS - 1)) %}
   [[t{{ NLEVELS-1 }}_{{ i }}]]
     script = """
-      $PYTHON_BINDIR/python $SRC_DIR/update.py init -g {{ GAMMA_INIT }} -a 0. -b 5. \
+      $PYTHON_BINDIR/python $SRC_DIR/update.py init -a 0. -b 5. \
                             -o $SRC_DIR/params{{ NLEVELS-1 }}_{{ i }}.npy
     """
 {% endfor %}
@@ -26,7 +25,7 @@
   {% for i in range(2**level) %}
   [[t{{ level }}_{{ i }}]]
     script = """
-      $PYTHON_BINDIR/python $SRC_DIR/update.py merge -g {{ GAMMA_INIT/(2**(NLEVELS-1-level)) }} \
+      $PYTHON_BINDIR/python $SRC_DIR/update.py merge \
                                       -o $SRC_DIR/params{{ level }}_{{ i }}.npy \
                                       $SRC_DIR/params{{ level+1 }}_{{ 2*i }}.npy \
                                       $SRC_DIR/params{{ level+1 }}_{{ 2*i+1 }}.npy
