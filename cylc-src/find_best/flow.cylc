@@ -1,5 +1,5 @@
 #!jinja2
-{% set NLEVELS = 5 %}
+{% set NLEVELS =  6 %}
 [scheduling]
   [[graph]]
     R1 = """
@@ -8,6 +8,7 @@
        t{{ level+1 }}_{{ 2*i }} & t{{ level+1 }}_{{ 2*i+1 }} => t{{ level }}_{{ i }}
    {% endfor %}
 {% endfor %}
+      t0_0 => plot
       """
 [runtime]
   [[root]]
@@ -32,4 +33,10 @@
     """
   {% endfor %}
 {% endfor %}
+  [[plot]]
+    script = """
+      $PYTHON_BINDIR/python $SRC_DIR/update.py plot \
+                            -d $SRC_DIR \
+                            -o $SRC_DIR/update.png
+    """
 
