@@ -1,6 +1,5 @@
 import defopt
 import sympy
-import random
 import numpy
 import glob
 import re
@@ -14,15 +13,15 @@ X = sympy.Symbol('x')
 #F = sympy.parsing.sympy_parser.parse_expr(OBJFUN_EXPR)
 
 
-def init(*, a: float=0., b:float=1., nsample: int=100) -> None:
+def init(*, xmin: float=0., xmax:float=1., nsample: int=100) -> None:
     """
     Random initialize
-    :param a: min value of interval to search
-    :param b: max value of interval to search
+    :param xmin: min value of interval to search
+    :param xmax: max value of interval to search
     :param nsample: number of samples 
     """
 
-    xs = a + (b - a)*numpy.random.rand(nsample)
+    xs = xmin + (xmax - xmin)*numpy.random.rand(nsample)
     print(f'param in the range {min(xs)} - {max(xs)}')
 
     # evaluate the cost function
@@ -36,16 +35,18 @@ def init(*, a: float=0., b:float=1., nsample: int=100) -> None:
     numpy.save(FILE, data)
 
 
-def fitness(*, tol: float=1.e-4) -> None:
+def fitness(*, tol: float=1.e-2, it: int=0) -> None:
     """
     Evaluate fitness
     :param tol: cost function tolerance
+    :param it: iteration number
     """
     data = numpy.load(FILE)
-    fmin = min(data[1, :])
-    print(f'min value: {fmin}')
-    if fmin > tol:
-        raise RuntimeError(f"\n\nNot yet achieved target fitness since min(f) = {fmin} > {tol}\n\n")
+    numpy.save(f'data{it:04d}.npy', data)
+    xs = data[0, :]
+    std = xs.std()
+    if std > tol:
+        raise RuntimeError(f"\n\nSpread of parameter is too large: std={std} > {tol}\n\n")
 
 
 
@@ -72,16 +73,35 @@ def select_breed(*, nselect: int=10):
 
 
 
-def plot() -> None:
+def plot(*, xmin: float=0., xmax:float=1., ymin: float=0., ymax: float=1.) -> None:
     """
     Plot the last solution
+    :param xmin: min x value for plotting
+    :param xmax: max x value for plotting
+    :param ymin: min y value for plotting
+    :param ymax: max y value for plotting
     """
+    for filename in glob.glob('data*.npy'):
+        # extract the iteration number
+        m = re.search(r'data(\d+).npy', filename)
+        if m:
+            it = int(m.group(1))
+            print(f'loading file {filename}')
+            data = numpy.load(filename)
+            pylab.figure()
+            pylab.plot(data[0, :], data[1, :], 'bo')
+            pylab.xlim(xmin, xmax)
+            pylab.ylim(ymin, ymax)
+            pylab.title(f'iteration {it}')
+            pylab.savefig(f'update{it:04d}.png')
+    # final
     data = numpy.load(FILE)
-    pylab.plot(data[0, :], data[1, :], 'ko')
+    pylab.figure()
+    pylab.plot(data[0, :], data[1, :], 'cx')
     i = numpy.argmin(data[1, :])
-    xopt, fopt = data[0, i], data[1, :]
+    xopt, fopt = data[0, i], data[1, i]
+    print(f'best solution is {xopt}, giving f = {fopt}')
     pylab.plot([xopt], [fopt], 'r*')
-
     pylab.savefig('update.png')
 
 

@@ -1,9 +1,17 @@
 #!jinja2
 {% set NSAMPLE =  100 %}
-{% set NSELECT = 10 %}
-{% set TOL = 1.e-4 }}
+{% set NSELECT = 20 %}
+{% set TOL = 0.01 %}
+{% set MAXNUMITERS = 10 %}
+{% set XMIN = 0.0 %}
+{% set XMAX = 5.0 %}
+{% set YMIN = 0.0 %}
+{% set YMAX = 3.0 %}
+
 [scheduling]
   cycling mode = integer
+  initial cycle point = 0
+  final cycle point = {{ MAXNUMITERS }}
   [[graph]]
     R1 = """
       random_init => fitness?
@@ -13,7 +21,7 @@
 
     P1 = """
       select_breed[-P1] => fitness?
-      fitness:fail? => select => select_breed
+      fitness:fail? => select_breed
       fitness:succeed? => stop
          """
 [runtime]
@@ -25,12 +33,12 @@
       script = """
       cd $SRC_DIR
       $PYTHON_BINDIR/python update.py init \
-          -a 0. -b 5. --nsample={{ NSAMPLE }} \
+          --xmin={{ XMIN }} --xmax={{ XMAX }} --nsample={{ NSAMPLE }}
       """
   [[fitness]]
       script = """
       cd $SRC_DIR
-      $PYTHON_BINDIR/python update.py fitness --tol={{ TOL }}
+      $PYTHON_BINDIR/python update.py fitness --tol={{ TOL }} --it=${CYLC_TASK_CYCLE_POINT}
       """
   [[select_breed]]
       script = """
@@ -40,5 +48,5 @@
   [[stop]]
       script = """
       cd $SRC_DIR
-      $PYTHON_BINDIR/python update.py plot
+      $PYTHON_BINDIR/python update.py plot --xmin={{ XMIN }} --xmax={{ XMAX }} --ymin={{ YMIN }} --ymax={{ YMAX }}
       """
