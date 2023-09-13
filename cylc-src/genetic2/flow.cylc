@@ -1,5 +1,5 @@
 #!jinja2
-{% set NSAMPLE =  100 %}
+{% set NSAMPLE =  20 %}
 {% set NSELECT = 20 %}
 {% set TOL = 0.01 %}
 {% set MAXNUMITERS = 10 %}
@@ -9,7 +9,7 @@
 {% set YMAX = 3.0 %}
 
 [task parameters]
-  m = 0..2
+  m = 0..4
 [scheduling]
   cycling mode = integer
   initial cycle point = 0
