@@ -1,0 +1,56 @@
+#!jinja2
+{% set NSAMPLE =  100 %}
+{% set NSELECT = 20 %}
+{% set TOL = 0.01 %}
+{% set MAXNUMITERS = 10 %}
+{% set XMIN = 0.0 %}
+{% set XMAX = 5.0 %}
+{% set YMIN = 0.0 %}
+{% set YMAX = 3.0 %}
+
+[task parameters]
+  m = 0..2
+[scheduling]
+  cycling mode = integer
+  initial cycle point = 0
+  final cycle point = {{ MAXNUMITERS }}
+  [[graph]]
+    R1 = """
+      random_init<m> => fitness<m>?
+      fitness<m>:fail? => select_breed
+      fitness<m>:succeed? => stop
+         """
+
+    P1 = """
+      select_breed[-P1] => fitness<m>?
+      fitness<m>:fail? => select_breed
+      fitness<m>:succeed? => stop
+         """
+[runtime]
+  [[root]]
+
+    [[[environment]]]
+      SRC_DIR = /Users/pletzera/cylc_patterns/cylc-src/genetic
+
+      PYTHON_BINDIR = /Users/pletzera/miniconda3/envs/pyaos-lesson/bin
+  [[random_init<m>]]
+      script = """
+      cd $SRC_DIR
+      $PYTHON_BINDIR/python update.py init \
+          --xmin={{ XMIN }} --xmax={{ XMAX }} --nsample={{ NSAMPLE }}
+      """
+  [[fitness<m>]]
+      script = """
+      cd $SRC_DIR
+      $PYTHON_BINDIR/python update.py fitness --tol={{ TOL }} --it=${CYLC_TASK_CYCLE_POINT}
+      """
+  [[select_breed]]
+      script = """
+      cd $SRC_DIR
+      $PYTHON_BINDIR/python update.py select-breed --nselect={{ NSELECT }}
+      """
+  [[stop]]
+      script = """
+      cd $SRC_DIR
+      $PYTHON_BINDIR/python update.py plot --xmin={{ XMIN }} --xmax={{ XMAX }} --ymin={{ YMIN }} --ymax={{ YMAX }}
+      """
