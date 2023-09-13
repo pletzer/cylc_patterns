@@ -30,19 +30,22 @@
   [[root]]
 
     [[[environment]]]
-      SRC_DIR = /Users/pletzera/cylc_patterns/cylc-src/genetic
+      SRC_DIR = /Users/pletzera/cylc_patterns/cylc-src/genetic2
 
       PYTHON_BINDIR = /Users/pletzera/miniconda3/envs/pyaos-lesson/bin
   [[random_init<m>]]
       script = """
       cd $SRC_DIR
       $PYTHON_BINDIR/python update.py init \
-          --xmin={{ XMIN }} --xmax={{ XMAX }} --nsample={{ NSAMPLE }}
+          --xmin={{ XMIN }} --xmax={{ XMAX }} --nsample={{ NSAMPLE }} \
+          --id=${CYLC_TASK_PARAM_m}
       """
   [[fitness<m>]]
       script = """
       cd $SRC_DIR
-      $PYTHON_BINDIR/python update.py fitness --tol={{ TOL }} --it=${CYLC_TASK_CYCLE_POINT}
+      $PYTHON_BINDIR/python update.py fitness --tol={{ TOL }} \
+                                      --it=${CYLC_TASK_CYCLE_POINT} \
+                                      --id=${CYLC_TASK_PARAM_m}
       """
   [[select_breed]]
       script = """
@@ -52,5 +55,6 @@
   [[stop]]
       script = """
       cd $SRC_DIR
-      $PYTHON_BINDIR/python update.py plot --xmin={{ XMIN }} --xmax={{ XMAX }} --ymin={{ YMIN }} --ymax={{ YMAX }}
+      $PYTHON_BINDIR/python update.py plot --xmin={{ XMIN }} --xmax={{ XMAX }} \
+                                           --ymin={{ YMIN }} --ymax={{ YMAX }}
       """
