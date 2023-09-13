@@ -1,7 +1,7 @@
 #!jinja2
 {% set NSAMPLE =  20 %}
 {% set NSELECT = 20 %}
-{% set TOL = 0.01 %}
+{% set TOL = 0.05 %}
 {% set MAXNUMITERS = 10 %}
 {% set XMIN = 0.0 %}
 {% set XMAX = 5.0 %}
@@ -17,18 +17,14 @@
   [[graph]]
     R1 = """
       clear => random_init<m> => fitness<m>?
-      fitness<m>:fail? => select_breed
-      fitness<m>:succeed? => stop
          """
-
     P1 = """
-      select_breed[-P1] => fitness<m>?
-      fitness<m>:fail? => select_breed
-      fitness<m>:succeed? => stop
+      select_breed[-P1] => FITNESSES?
+      FITNESSES:fail-all? => select_breed
+      FITNESSES:succeed-any? => stop
          """
 [runtime]
   [[root]]
-
     [[[environment]]]
       SRC_DIR = /Users/pletzera/cylc_patterns/cylc-src/genetic2
 
@@ -36,7 +32,7 @@
   [[clear]]
     script = """
       cd $SRC_DIR
-      rm *.npy
+      rm *.npy *.png
     """
   [[random_init<m>]]
       script = """
@@ -45,7 +41,10 @@
           --xmin={{ XMIN }} --xmax={{ XMAX }} --nsample={{ NSAMPLE }} \
           --id=${CYLC_TASK_PARAM_m}
       """
+  [[FITNESSES]]
+
   [[fitness<m>]]
+      inherit = FITNESSES
       script = """
       cd $SRC_DIR
       $PYTHON_BINDIR/python update.py fitness --tol={{ TOL }} \
@@ -55,11 +54,15 @@
   [[select_breed]]
       script = """
       cd $SRC_DIR
-      $PYTHON_BINDIR/python update.py select-breed --nselect={{ NSELECT }}
+      $PYTHON_BINDIR/python update.py select-breed --nselect={{ NSELECT }} \
+                                      --it=${CYLC_TASK_CYCLE_POINT} \
+                                      --xmin={{ XMIN }} --xmax={{ XMAX }} \
+                                      --ymin={{ YMIN }} --ymax={{ YMAX }}
       """
   [[stop]]
       script = """
       cd $SRC_DIR
       $PYTHON_BINDIR/python update.py plot --xmin={{ XMIN }} --xmax={{ XMAX }} \
                                            --ymin={{ YMIN }} --ymax={{ YMAX }}
+      cylc stop $CYLC_WORKFLOW_ID
       """

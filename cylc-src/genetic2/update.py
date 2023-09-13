@@ -55,30 +55,42 @@ def fitness(*, tol: float=1.e-2, it: int=0, id: int=0) -> None:
         raise RuntimeError(f"\n\nSpread of parameter is too large: std={std} > {tol}\n\n")
 
 
-def select_breed(*, nselect: int=10):
+def select_breed(*, nselect: int=10, it: int=0, xmin: float=0., xmax:float=1., ymin: float=0., ymax: float=1.):
     """
     Select candidates with highest score and breed them
-    :param nselect: number of selected individuals  
+    :param nselect: number of selected individuals
+    :param it: iteration number
+    :param xmin: min x value for plotting
+    :param xmax: max x value for plotting
+    :param ymin: min y value for plotting
+    :param ymax: max y value for plotting
     """
     data_all = []
     nsample_all = []
     id_all = []
-    it_all = []
-    for filename in glob.glob('data_id*_it*.npy'):
-        m = re.search('data_id(\d+)*_it(\d+).npy', filename)
+    for filename in glob.glob(f'data_id*_it{it:04}.npy'):
+        m = re.search(r'data_id(\d+)*_it\d+.npy', filename)
         id = int(m.group(1))
-        it = int(m.group(2))
         data = numpy.load(filename)
         nsample_all.append(data.shape[1])
         data_all.append(data)
         id_all.append(id)
-        it_all.append(it)
 
     print(f'select_breed: number of ids: {len(data_all)}')
     print(f'select_breed: shape of id 0: {data_all[0].shape}')
     data = numpy.concatenate(data_all, axis=1)
     print(f'select_breed: shape of concatenated array: {data.shape}')
     nsample = data.shape[1]
+
+    # do some plotting
+    pylab.plot(data[0,:], data[1,:], 'bx')
+    pylab.xlim(xmin, xmax)
+    pylab.ylim(ymin, ymax)
+    pylab.title(f'it = {it}')
+    figfile = f'plot_it{it:04d}.png'
+    print(f'plot: saving plot in file {figfile}')
+    pylab.savefig(figfile)
+
 
     # indices with the smallest nselect objective function values
     inds = numpy.argpartition(data[1, :], nselect)[:nselect]
@@ -101,7 +113,7 @@ def select_breed(*, nselect: int=10):
 
         newData = 0.5*(data[:, indsParentA] + data[:, indsParentB])
 
-        datafile = f'data_id{id_all[i]:03d}_it{it_all[i]:04d}.npy'
+        datafile = f'data_id{id_all[i]:03d}_it{it:04d}.npy'
         print(f'select_breed: saving data in file {datafile}')
         numpy.save(datafile, newData)
 
@@ -120,21 +132,6 @@ def plot(*, xmin: float=0., xmax:float=1., ymin: float=0., ymax: float=1.) -> No
     :param ymin: min y value for plotting
     :param ymax: max y value for plotting
     """
-    for filename in glob.glob('data_id*_it*.npy'):
-        # extract the iteration number
-        m = re.search(r'data_id(\d+)_it(\d+).npy', filename)
-        id = int(m.group(1))
-        it = int(m.group(2))
-        print(f'loading file {filename}')
-        data = numpy.load(filename)
-        pylab.figure()
-        pylab.plot(data[0, :], data[1, :], 'bo')
-        pylab.xlim(xmin, xmax)
-        pylab.ylim(ymin, ymax)
-        pylab.title(f'id = {id} it = {it}')
-        figfile = f'update_id{id:03d}_it{it:04d}.png'
-        print(f'plot: saving plot in file {figfile}')
-        pylab.savefig(figfile)
 
     # final
     data = numpy.load('last_selected_data.npy')
