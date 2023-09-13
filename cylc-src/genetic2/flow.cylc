@@ -16,7 +16,7 @@
   final cycle point = {{ MAXNUMITERS }}
   [[graph]]
     R1 = """
-      random_init<m> => fitness<m>?
+      clear => random_init<m> => fitness<m>?
       fitness<m>:fail? => select_breed
       fitness<m>:succeed? => stop
          """
@@ -33,6 +33,11 @@
       SRC_DIR = /Users/pletzera/cylc_patterns/cylc-src/genetic2
 
       PYTHON_BINDIR = /Users/pletzera/miniconda3/envs/pyaos-lesson/bin
+  [[clear]]
+    script = """
+      cd $SRC_DIR
+      rm *.npy
+    """
   [[random_init<m>]]
       script = """
       cd $SRC_DIR

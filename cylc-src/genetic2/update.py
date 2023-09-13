@@ -105,6 +105,12 @@ def select_breed(*, nselect: int=10):
         print(f'select_breed: saving data in file {datafile}')
         numpy.save(datafile, newData)
 
+        ## this file will be read by fitness...
+        datafile = f'data_id{id_all[i]:03d}.npy'
+        print(f'select_breed: saving data in file {datafile}')
+        numpy.save(datafile, newData)
+
+
 
 def plot(*, xmin: float=0., xmax:float=1., ymin: float=0., ymax: float=1.) -> None:
     """
@@ -117,7 +123,7 @@ def plot(*, xmin: float=0., xmax:float=1., ymin: float=0., ymax: float=1.) -> No
     for filename in glob.glob('data_id*_it*.npy'):
         # extract the iteration number
         m = re.search(r'data_id(\d+)_it(\d+).npy', filename)
-        id = int(m.group(1)),
+        id = int(m.group(1))
         it = int(m.group(2))
         print(f'loading file {filename}')
         data = numpy.load(filename)
@@ -125,8 +131,10 @@ def plot(*, xmin: float=0., xmax:float=1., ymin: float=0., ymax: float=1.) -> No
         pylab.plot(data[0, :], data[1, :], 'bo')
         pylab.xlim(xmin, xmax)
         pylab.ylim(ymin, ymax)
-        pylab.title(f'iteration {it}')
-        pylab.savefig(f'update_id{id:03d}_it{it:04d}.png')
+        pylab.title(f'id = {id} it = {it}')
+        figfile = f'update_id{id:03d}_it{it:04d}.png'
+        print(f'plot: saving plot in file {figfile}')
+        pylab.savefig(figfile)
 
     # final
     data = numpy.load('last_selected_data.npy')
